@@ -1,0 +1,102 @@
+<!--
+ * COMP229-015    Group 7
+ * Group Project  Part 4 Final Release
+ * Project Name:  Survey Donkey
+ * 
+ * Members (name/student ID):
+ * Alina Fadeeva – 301249589
+ * Nadia Velikaia – 301244426
+ * Terence Chu – 301220117
+ * Zhihao Yu – 301305633
+ * Akash Arora – 300849838
+ * Nithiyavany Vijai – 301212774
+ * 
+ * File name:     takeSurvey.ejs
+ * Description:   Take survey page
+-->
+<%- include ../partials/header.ejs %>
+
+<%- include ../partials/main_nav.ejs %>
+
+<!-- Content for the Edit page -->
+<br> <br> <br>
+<div class="container">
+    <div class="row">
+        <div class="offset-md-3 col-md-6">
+            
+            <!-- The survey types Multiple Choice and Short Answers share the following in the Take Survey page:
+                 - Survey Title field
+                 - Name field
+                 - Question field
+                 - Submit button
+                 - Cancel button
+                
+                Use if logic to determine whether the 4 radio buttons or texbox should be provided to the user. -->
+
+            <h1 class="text-center"><%= survey.title %></h1>
+            
+            <form class="form" method="POST">
+                <div class="form-group mt-3 mb-3">
+                    <label for="userNameTextField">Your Name:</label>
+                    <input type="text" class="form-control" id="userNameTextField" placeholder="User Name" name="userName" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="q1TextField">Question 1: <%= survey.q1 %></label>
+                </div>
+               
+
+                <% if(survey.surveyType == 'Multiple Choice') { %>
+
+                    <div class="form-group mb-3">
+                        <input type = "radio" name = "optQ1" id = "optQ1" value="<%= survey.q1Opt1 %>" required>
+
+                        <label for="optQ1"><%= survey.q1Opt1 %></label>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <input type = "radio" name = "optQ1" id = "optQ2" value="<%= survey.q1Opt2 %>">
+                        <label for="optQ2"><%= survey.q1Opt2 %></label>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <input type = "radio" name = "optQ1" id = "optQ3" value="<%= survey.q1Opt3 %>">
+                        <label for="optQ3"><%= survey.q1Opt3 %></label>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <input type = "radio" name = "optQ1" id = "optQ4" value="<%= survey.q1Opt4 %>">
+                        <label for="optQ4"><%= survey.q1Opt4 %></label>
+                    </div>
+
+                <% } else if (survey.surveyType == 'Short Answers') { %>
+
+                    <div class="form-group mb-3">
+                        <textarea rows="5" cols="84" name="txtResponse" placeholder="Please enter your answer here" required></textarea><br>
+                    </div>
+
+                <% } %>
+
+                
+                <!-- Hidden Fields -->
+                <!-- These hidden fields will send the relevant data to the controller to write to the DB -->
+                <input type="hidden" id="surveyType" name="surveyType" value="<%= survey.surveyType %>">
+                <input type="hidden" id="surveyTitle" name="surveyTitle" value="<%= survey.title %>">
+                <input type="hidden" id="question" name="question" value="<%= survey.q1 %>">
+
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-edit"></i> Submit</button>
+
+                <a href="/survey-list" class="btn btn-warning">
+                    <i class="fas fa-undo"></i> Cancel</a> 
+            </form>
+            <br><br>
+            <br><br>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<%- include ../partials/bottom_nav.ejs %>
+
+<%- include ../partials/footer.ejs %>

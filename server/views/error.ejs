@@ -1,0 +1,29 @@
+<!--
+ * COMP229-015    Group 7
+ * Group Project  Part 4 Final Release
+ * Project Name:  Survey Donkey
+ * 
+ * Members (name/student ID):
+ * Alina Fadeeva – 301249589
+ * Nadia Velikaia – 301244426
+ * Terence Chu – 301220117
+ * Zhihao Yu – 301305633
+ * Akash Arora – 300849838
+ * Nithiyavany Vijai – 301212774
+ * 
+ * File name:     error.ejs
+ * Description:   Error handling page
+-->
+
+<!-- Error handling -->
+<%- include partials/header.ejs %>
+<%- include partials/main_nav.ejs %>
+
+<div class="container">
+    <h1><%= message %></h1>
+    <h2><%= error.status %></h2>
+    <pre><%= error.stack %></pre>
+</div>
+
+<%- include partials/bottom_nav.ejs %>
+<%- include partials/footer.ejs %>

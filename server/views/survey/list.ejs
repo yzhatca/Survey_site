@@ -1,0 +1,175 @@
+<!--
+ * COMP229-015    Group 7
+ * Group Project  Part 4 Final Release
+ * Project Name:  Survey Donkey
+ * 
+ * Members (name/student ID):
+ * Alina Fadeeva – 301249589
+ * Nadia Velikaia – 301244426
+ * Terence Chu – 301220117
+ * Zhihao Yu – 301305633
+ * Akash Arora – 300849838
+ * Nithiyavany Vijai – 301212774
+ * 
+ * File name:     list.ejs
+ * Description:   Surveys list page
+-->
+
+<%- include ../partials/header.ejs %>
+
+<%- include ../partials/main_nav.ejs %>
+
+  <!-- Main Content -->
+<br> 
+<main class="container mt-5 mb-3">
+    <div class="row">
+        <div class="offset-md-1 col-md-10">
+            <h1 class="text-center">Surveys</h1>
+            
+            <% if(userType == 'Survey Creator') { %>
+                <a href="/survey-list/add" class="btn btn-primary" role="button">
+                    <i class="fas fa-plus-circle"></i> Create a Survey </a>
+                    
+            <% } %>
+
+            <br> <br>
+            <table class="table table-bordered table-striped table-hover">
+                <!-- Header Row -->
+
+                <tr>
+                        
+                    <% if(userType == 'Survey Taker') { %>
+                        
+                            <th class="text-center col-2">Survey Name</th>
+                            <th class="text-center col-3">Description</th>            
+                            <th class="text-center col-2">End Date</th>
+                            <th class="text-center col-2">Take Survey</th>                      
+                        
+                    <% } else if (userType == 'Survey Creator') { %>
+                            <th class="text-center col-2">Survey Name</th>
+                            <th class="text-center col-3">Description</th>                        
+                            <th class="text-center col-2">End Date</th>
+                            <th class="text-center col-2">Take Survey</th>
+                            <th class="text-center col-1">Edit Survey</th> 
+                            <th class="text-center col-2">See Results</th>
+                            <th class="text-center col-1">Delete Survey</th>
+
+                    <% } else { %>
+                        
+                            <th class="text-center col-2">Survey Name</th>
+                            <th class="text-center col-3">Description</th>
+                            <th class="text-center col-2">End Date</th>
+                            <th class="text-center col-2">Take Survey</th>
+
+                    <% } %>
+                
+                </tr> 
+
+                <!-- Repeatable Template Row -->
+                <% for(let count = 0; count < SurveyList.length; count++) { %>
+                    <tr>
+                        <td class="text-center col-2"><%= SurveyList[count].title %></td>  
+
+                        <% if (userType == 'Survey Taker' && new Date() > SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">Expired</td> 
+
+                        <% } else if (userType == 'Survey Taker' && new Date() <= SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                                <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                                <td class="text-center col-2">
+                                    <a href="/survey-list/takeSurvey/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-check-square"></i>Take Survey</a>
+                                </td>                 
+                            
+                        <% } else if (userType == 'Survey Creator' && SurveyList[count].surveyCreator == username && new Date() <= SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">
+                                <a href="/survey-list/takeSurvey/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-check-square"></i>Take Survey</a>
+                            </td>
+                            <td class="text-center col-1">
+                                <a href="/survey-list/edit/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                <i class="fas fa-pencil-alt"></i> Edit </a>
+                            </td>
+                            <td class="text-center col-2">
+                                <a href="/survey-list/results/<%= SurveyList[count].title %>" class="btn btn-primary btn-sm">
+                                <i class="bi bi-check-square"></i>See Results</a>
+                            </td>
+                            <td class="text-center col-1">
+                                <a href="/survey-list/delete/<%= SurveyList[count]._id %>" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete </a>
+                            </td>
+
+                        <% } else if (userType == 'Survey Creator' && SurveyList[count].surveyCreator == username && new Date() > SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">Expired</td>
+                            <td class="text-center col-1">
+                                <a href="/survey-list/edit/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                <i class="fas fa-pencil-alt"></i> Edit </a>
+                            </td>
+                            <td class="text-center col-2">
+                                <a href="/survey-list/results/<%= SurveyList[count].title %>" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-check-square"></i> See Results</a>
+                            </td>
+                            <td class="text-center col-1">
+                                <a href="/survey-list/delete/<%= SurveyList[count]._id %>" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete </a>
+                            </td>
+
+                        <!-- If a survey creator is logged in, display the following for surveys that DO NOT belong to them: -->
+                        <!-- Description -->
+                        <!-- End Date -->
+                        <!-- Take Survey button -->
+                        <!-- Empty Edit Survey column -->
+                        <!-- Empty See Results column -->
+                        <!-- Empty Delete Survey column -->
+                        <% } else if (userType == 'Survey Creator' && SurveyList[count].surveyCreator != username && new Date() <= SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">
+                                <a href="/survey-list/takeSurvey/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-check-square"></i> Take Survey</a>
+                            </td>
+                            <td class="text-center col-1"></td> 
+                            <td class="text-center col-2"></td>
+                            <td class="text-center col-1"></td> 
+
+                        <% } else if (userType == 'Survey Creator' && SurveyList[count].surveyCreator != username && new Date() > SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">Expired</td>
+                            <td class="text-center col-1"></td> 
+                            <td class="text-center col-2"></td>
+                            <td class="text-center col-1"></td> 
+
+                        <% } else if (new Date() <= SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">
+                                <a href="/survey-list/takeSurvey/<%= SurveyList[count]._id %>" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-check-square"></i> Take Survey</a>
+                            </td>
+                        <% } else if (new Date() > SurveyList[count].endDate) { %>
+                            <td class="text-center col-3"><%= SurveyList[count].description %></td>
+                            <td class="text-center col-2"><%= SurveyList[count].endDate.toISOString().split('T')[0] %></td>
+                            <td class="text-center col-2">Expired</td> 
+                        <% } %> 
+
+                    </tr>
+                <% } %>
+            </table>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</main>
+
+
+<%- include ../partials/bottom_nav.ejs %>
+
+<%- include ../partials/footer.ejs %>
